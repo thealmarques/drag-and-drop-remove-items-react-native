@@ -2,7 +2,7 @@
 
 ## Example
 
-<img src="resources/demo.gif" height="50%" width="80%"/>
+<img src="resources/demo.gif" height="40%" width="30%"/>
 
 ## Installation
 
