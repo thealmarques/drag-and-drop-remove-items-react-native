@@ -5,6 +5,7 @@ import {
   PanGestureHandlerStateChangeEvent,
   State,
 } from "react-native-gesture-handler";
+import { styles } from './styles';
 export class DragAndDrop extends React.Component {
   state = {
     images: [
@@ -18,26 +19,14 @@ export class DragAndDrop extends React.Component {
   render() {
     return (
       <View
-        style={{
-          flex: 1,
-        }}
+        style={styles.container}
       >
         {this.floatingDelete()}
         <View
-          style={{
-            flex: 1,
-            alignItems: "flex-start",
-            justifyContent: "flex-end",
-            marginBottom: 20,
-          }}
+          style={styles.bottomContainer}
         >
           <View
-            style={{
-              flexDirection: "row",
-              width: "100%",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+            style={styles.imageContainer}
           >
             {this.getImages()}
           </View>
@@ -48,26 +37,17 @@ export class DragAndDrop extends React.Component {
 
   floatingDelete() {
     if (this.state.floatingDelete) {
-    return (
-      <View
-        style={{
-          position: "absolute",
-          marginTop: 60,
-          left: "45%",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Image
-          style={{
-            width: 40,
-            height: 40,
-          }}
-          source={require("../assets/delete.png")}
-        ></Image>
-      </View>
-    );
-  }
+      return (
+        <View
+          style={styles.floatingContainer}
+        >
+          <Image
+            style={styles.floatingIcon}
+            source={require("../assets/delete.png")}
+          ></Image>
+        </View>
+      );
+    }
   }
 
   _onPanGestureEvent = (index: number) =>
@@ -86,14 +66,12 @@ export class DragAndDrop extends React.Component {
   resetAnimationView(index: number) {
     Animated.spring(this.point[index], {
       toValue: { x: 0, y: 0 },
-      tension: 50,
-      velocity: 70,
-    }).start();
-    setTimeout(() => {
+      speed: 200
+    }).start(() => {
       this.setState({
-        floatingDelete  : false,
-      });
-    }, 500);
+        floatingDelete: false
+      })
+    });
   }
 
   onHandlerStateChange(
@@ -103,8 +81,8 @@ export class DragAndDrop extends React.Component {
     if (nativeEvent.state === State.END) {
       const width = Dimensions.get("window").width;
       const heightOffset = 60;
-      const imageWidth = 100;
-      const imageHeight = 100;
+      const imageWidth = 40;
+      const imageHeight = 40;
       const middleWidth = width / 2;
       if (
         nativeEvent.absoluteY < heightOffset + imageHeight &&
@@ -120,7 +98,8 @@ export class DragAndDrop extends React.Component {
             }
           });
           this.setState({
-            images: aux_images
+            images: aux_images,
+            floatingDelete: false
           });
         } else {
           this.resetAnimationView(index);
@@ -130,7 +109,7 @@ export class DragAndDrop extends React.Component {
       }
     } else {
       this.setState({
-        floatingDelete: true,
+        floatingDelete: true
       });
     }
   }
@@ -150,11 +129,7 @@ export class DragAndDrop extends React.Component {
             <Animated.Image
               key={image.id}
               style={[
-                {
-                  width: 100,
-                  height: 100,
-                  marginRight: 10,
-                },
+                styles.image,
                 {
                   transform: [
                     { translateY: this.point[index].y },
